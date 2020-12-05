@@ -1,7 +1,11 @@
 import _pickle as cp
+import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 from scipy import stats
+import pprint
+
+pp = pprint.PrettyPrinter(indent=4)
 
 
 # calculates the mean squared error of y and y_hat
@@ -75,28 +79,34 @@ def split(X, y, n_train, n_test):
 
 	return X_train, y_train, X_test, y_test
 
+def wrapLin(X, y, n_train, n_test):
+	X_train, y_train, X_test, y_test = split(X.copy(), y, n_train, n_test)
+	return lin((X_train, y_train, n_train), (X_test, y_test, n_test))
+
+def visualiseErrors(errors, step):
+	x = range(20, 600, step)
+	trainErrs = [error[0] for error in errors]
+	testErrs =[error[1] for error in errors]
+
+	plt.plot(x, trainErrs, color='skyblue', linewidth=1.5, label = "Training error")
+	plt.plot(x, testErrs, color='red', linewidth=1.5, label = "Testing error")
+	plt.xlabel('Elements used for training')
+	plt.ylabel('Error')
+	plt.title('Testing vs Training error for different values of n_train')
+	plt.legend()
+	plt.show()
+	
+
 def main():
 
 	# import white whine data, X input set, y is the output set
 	X, y = cp.load(open('winequality-white.pickle','rb'))
-	n, d = X.shape
+	n, d = X.shape	
 
-#	mkbar(y)
+	step = 20
+	errors = [wrapLin(X, y, n_train, n - n_train) for n_train in range(20, 600, step)]
+	visualiseErrors(errors, step)
 
-	# split up  the data
-	n_train = int(n * 0.8)
-	n_test = n - n_train
-
-	# pass a copy of X so the regularisation phase doesn't affect X
-	X_train, y_train, X_test, y_test = split(X.copy(), y, n_train, n_test)
-
-	# error calculations
-	naiveErr = naive(y_train, y_test)
-	linTrainErr, linTestErr = lin((X_train, y_train, n_train), (X_test, y_test, n_test))
-
-	print("The mean squared difference between the average and the outputs is: " + str(naiveErr))
-	print("Linear regression training error is: " + str(linTrainErr) + 
-		" testing error is: " + str(linTestErr))
 	# naiveErr = 0.40692865000227674
 	# trainErr = 0.2819998086970962, testErr = 0.2803646021141735
 
