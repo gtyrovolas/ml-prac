@@ -70,7 +70,6 @@ def lin(trainingData, testingData):
 
 # splits X and y in training and testing data
 def split(X, y, n_train, n_test):
-
 	X_train = X[ : n_train]
 	y_train = y[ : n_train]
 
@@ -79,6 +78,7 @@ def split(X, y, n_train, n_test):
 
 	return X_train, y_train, X_test, y_test
 
+# wrapper for linear regression
 def wrapLin(X, y, n_train, n_test):
 	X_train, y_train, X_test, y_test = split(X.copy(), y, n_train, n_test)
 	return lin((X_train, y_train, n_train), (X_test, y_test, n_test))
@@ -99,18 +99,31 @@ def visualiseErrors(errors, step):
 
 def main():
 
-	# import white whine data, X input set, y is the output set
+	# import white whine data, X is the input set, y is the output set
 	X, y = cp.load(open('winequality-white.pickle','rb'))
 	n, d = X.shape	
 
+#	Handin 1: Bar graph
+	mkbar(y)
+
+#	Handin 2: Error for naive average "predictor" 
+	n_train = int(0.8 * n)
+	naiveErr = naive(y[:n_train], y[n_train:])
+	print("Naive error is: " + str(naiveErr)) # naiveErr = 0.40692865000227674
+
+#	Handin 3: Linear regression errors 
+	trainErr, testErr = wrapLin(X, y, int(0.8 * n), n - int(0.8 * n))
+	print("Training error is: " + str(trainErr)) # trainErr = 0.2819998086970962
+	print("Testing error is:  " + str(testErr))  # testErr  = 0.2803646021141735
+
+#	Handin 4: Overfitting graphs
 	step = 20
 	errors = [wrapLin(X, y, n_train, n - n_train) for n_train in range(20, 600, step)]
 	visualiseErrors(errors, step)
 
-	# naiveErr = 0.40692865000227674
-	# trainErr = 0.2819998086970962, testErr = 0.2803646021141735
-
-
+#	The difference of training error and testing error is sufficiently small for n >= 500
+#	I don't think we need more training data. Nevertheless, the model is underfitting due
+#	to the expressive limitations of linear regression
 
 main()
 
