@@ -16,7 +16,7 @@ def  meanSqErr(y, y_hat):
 def mkLineGraph(errors, step):
 	x = range(20, 600, step)
 	trainErrs = [error[0] for error in errors]
-	testErrs =[error[1] for error in errors]
+	testErrs = [error[1] for error in errors]
 
 	plt.plot(x, trainErrs, color='skyblue', linewidth=1.5, label = "Training error")
 	plt.plot(x, testErrs, color='red', linewidth=1.5, label = "Testing error")
@@ -26,7 +26,6 @@ def mkLineGraph(errors, step):
 	plt.legend()
 
 	plt.show()
-	
 
 # constructs and shows a bar graph of the distribution of wine quality
 def mkbar(y):
