@@ -8,7 +8,7 @@ from scipy import stats
 def  meanSqErr(y, y_hat):
 	return np.square(y - y_hat).mean() / 2
 
-# constructs and shows a bar graph for the distribution of wine quality
+# constructs and shows a bar graph of the distribution of wine quality
 def mkbar(y):
 	qual_cnt = [0] * 10
 	for y_i in y:
@@ -22,13 +22,13 @@ def mkbar(y):
 	plt.show()
 
 # naive predictor which returns the mean squared difference between
-# the average and the outputs
+# the average of the training and the testing data
 def naive(y_train, y_test):
 	avg = np.average(y_train)
 	naiveErr = meanSqErr(y_test, avg)
 	return naiveErr
 
-# function used to regularise input data based on the training data
+# regularises input data based on the training data
 def regularise(X_train, X_test):
 	for col, col_test in zip(X_train.T, X_test.T):
 		avg = np.average(col)
@@ -39,7 +39,7 @@ def regularise(X_train, X_test):
 		col_test -= avg
 		col_test /= std
 
-# linear regression trained on X_train and tested on X_test
+# linear regression trained on trainingData and tested on testingData
 def lin(trainingData, testingData):
 
 	X_train, y_train, n_train = trainingData
@@ -55,7 +55,7 @@ def lin(trainingData, testingData):
 	X_train = np.hstack((ones_vector_train, X_train))
 	X_test = np.hstack((ones_vector_test, X_test))
 
-	# based on the formula for w given in the notes
+	# calculate weights based on the formula given in the notes
 	w = np.linalg.inv(X_train.T @ X_train) @ X_train.T @ y_train
 
 	# error calculation
@@ -64,6 +64,7 @@ def lin(trainingData, testingData):
 
 	return trainErr, testErr
 
+# splits X and y in training and testing data
 def split(X, y, n_train, n_test):
 
 	X_train = X[ : n_train]
@@ -78,26 +79,26 @@ def main():
 
 	# import white whine data, X input set, y is the output set
 	X, y = cp.load(open('winequality-white.pickle','rb'))
-	
+	n, d = X.shape
+
 #	mkbar(y)
 
 	# split up  the data
-	n, d = X.shape
-
 	n_train = int(n * 0.8)
 	n_test = n - n_train
 
 	# pass a copy of X so the regularisation phase doesn't affect X
 	X_train, y_train, X_test, y_test = split(X.copy(), y, n_train, n_test)
 
+	# error calculations
 	naiveErr = naive(y_train, y_test)
 	linTrainErr, linTestErr = lin((X_train, y_train, n_train), (X_test, y_test, n_test))
 
 	print("The mean squared difference between the average and the outputs is: " + str(naiveErr))
 	print("Linear regression training error is: " + str(linTrainErr) + 
 		" testing error is: " + str(linTestErr))
-	# 0.40692865000227674
-	# 0.2819998086970962 0.2803646021141735
+	# naiveErr = 0.40692865000227674
+	# trainErr = 0.2819998086970962, testErr = 0.2803646021141735
 
 
 
