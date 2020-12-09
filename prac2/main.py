@@ -15,7 +15,6 @@ class NBC:
         self.num_classes = num_classes
 
 
-
     def fit(self, X, y):
         # calculate probabilities of p_c
         count = Counter(y)
@@ -37,25 +36,20 @@ class NBC:
                 sd_i = np.std(col)
                 sd_i = max(10 ** -6, sd_i)
 
-                self.theta[c].append((mean_i, sd_i))
-
-        
-
-            
-        
+                self.theta[c].append((mean_i, sd_i))      
 
 
     def predict(self, X):
         
         yhat = []
         for x_i in X:
-            maxProb = -10000
+            maxProb = -1000000
             maxClass = 0
 
             for p_c, (c, theta_c) in list(zip(self.p.values(), self.theta.items())):
-                prob = p_c
+                prob = np.log(p_c)
                 means, stdevs = tuple(zip(*theta_c))
-                prob *= np.prod(stats.norm.pdf(x_i, means, stdevs))
+                prob += np.sum(np.log(stats.norm.pdf(x_i, means, stdevs)))
                 
                 if(maxProb < prob):
                     maxProb = prob
@@ -71,8 +65,8 @@ def main():
     y = np.array([i // 7 for i in range(20)])
 
     nbc = NBC(['r', 'r'], 3)
+    
     nbc.fit(X, y)
-
     nbc.predict(np.array([[3.5, 4.5], [10, 3]]))
 
 
