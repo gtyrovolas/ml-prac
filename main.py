@@ -4,6 +4,8 @@ import numpy as np
 import matplotlib.pyplot as plt
 from scipy import stats
 import pprint
+import sklearn as sk
+from sklearn import linear_model as lm
 
 pp = pprint.PrettyPrinter(indent=4)
 
@@ -97,6 +99,63 @@ def wrapLin(X, y, n_train, n_test):
 	regularise(X_train, X_test)
 	return lin((X_train, y_train, n_train), (X_test, y_test, n_test))
 
+def findmin( models, X_train, y_train, X_val, y_val):
+
+	minErr = 10000
+	l = -1
+
+	for l, model in models:
+		model.fit( X_train, y_train)
+		yhat = model.predict(X_val)
+		err = meanSqErr(y_val, yhat)
+		
+		if minErr > err:
+			minErr = err
+			minL = l
+	
+	return minL
+		
+def wrapLnR(X, y, n_train, idx_test, idx_val):
+
+	poly = sk.preprocessing.PolynomialFeatures(2)
+	X = poly.fit_transform(X)
+	
+	X_train = X[ : n_train]
+	y_train = y[ : n_train]
+
+	X_test = X[n_train : idx_test]
+	y_test = y[n_train : idx_test]
+
+	X_val = X[idx_test : ]
+	y_val = y[idx_test : ]
+
+	lambdas = [10 ** i for i in range(-2,3)]
+	
+	ridge_models = [(l, lm.Ridge(l)) for l in lambdas]
+	lasso_models = [(l, lm.Lasso(l)) for l in lambdas]
+
+	l_ridge = findmin(ridge_models, X_train, y_train, X_val, y_val)
+	l_lasso = findmin(lasso_models, X_train, y_train, X_val, y_val)
+
+	opt_ridge = lm.Ridge(l_ridge)
+	opt_ridge.fit(X_train, y_train)
+	yhat = opt_ridge.predict(X_test)
+	
+	ridge_testErr = meanSqErr(y_test, yhat)
+	ridge_trainErr = meanSqErr(y_train, opt_ridge.predict(X_train))
+
+	print("Ridge testing error: " + str(ridge_testErr) + " training error " + str(ridge_trainErr))
+#	Ridge Errors: test 0.2556989659080753 train 0.25114266206962255
+
+	opt_lasso = lm.Lasso(l_lasso)
+	opt_lasso.fit(X_train, y_train)
+	yhat = opt_lasso.predict(X_test)
+	
+	lasso_testErr = meanSqErr(y_test, yhat)
+	lasso_trainErr = meanSqErr(y_train, opt_ridge.predict(X_train))
+	print("Lasso testing error: " + str(lasso_testErr) + " training error " + str(lasso_trainErr))
+#	Lasso Errors: test 0.2730825711508707 train 0.25114266206962255
+
 
 def main():
 
@@ -125,6 +184,14 @@ def main():
 #	The difference of training error and testing error is sufficiently small for n >= 500
 #	I don't think we need more training data. Nevertheless, the model is underfitting due
 #	to the expressive limitations of linear regression
+
+#	Handin 5: Ridge and lasso
+	n_train = int(0.6 * n)
+	idx_test = int(0.8 * n)
+	idx_val = n
+	wrapLnR(X, y, n_train, idx_test, idx_val)
+		
+
 
 main()
 
