@@ -1,4 +1,5 @@
 import numpy as np
+from scipy import stats
 from collections import Counter
 from collections import defaultdict
 
@@ -45,18 +46,34 @@ class NBC:
 
 
     def predict(self, X):
-        """
-        Predict the outputs for input X
-        """
-        y = []
-        return y
+        
+        yhat = []
+        for x_i in X:
+            maxProb = -10000
+            maxClass = 0
+
+            for p_c, (c, theta_c) in list(zip(self.p.values(), self.theta.items())):
+                prob = p_c
+                means, stdevs = tuple(zip(*theta_c))
+                prob *= np.prod(stats.norm.pdf(x_i, means, stdevs))
+                
+                if(maxProb < prob):
+                    maxProb = prob
+                    maxClass = c
+
+            yhat.append(maxClass) 
+
+        return yhat
 
 
 def main():
     X = np.array([ [i, i + 1]  for i in range(20)])
-    y = np.array([i % 3 for i in range(20)])
+    y = np.array([i // 7 for i in range(20)])
 
     nbc = NBC(['r', 'r'], 3)
     nbc.fit(X, y)
+
+    nbc.predict(np.array([[3.5, 4.5], [10, 3]]))
+
 
 main()
