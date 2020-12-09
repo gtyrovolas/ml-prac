@@ -68,6 +68,5 @@ def main():
     
     nbc.fit(X, y)
     nbc.predict(np.array([[3.5, 4.5], [10, 3]]))
-
-
+    
 main()
