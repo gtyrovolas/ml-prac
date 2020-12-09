@@ -161,7 +161,7 @@ def main():
 
 	# import white whine data, X is the input set, y is the output set
 	X, y = cp.load(open('winequality-white.pickle','rb'))
-	n, d = X.shape	
+	n, _ = X.shape	
 
 #	Handin 1: Bar graph
 	mkbar(y)
