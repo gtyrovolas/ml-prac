@@ -2,6 +2,7 @@ import numpy as np
 from scipy import stats
 from collections import Counter
 from collections import defaultdict
+from sklearn.linear_model import LogisticRegression
 
 class NBC:
 
@@ -61,12 +62,13 @@ class NBC:
 
 
 def main():
-    X = np.array([ [i, i + 1]  for i in range(20)])
-    y = np.array([i // 7 for i in range(20)])
 
-    nbc = NBC(['r', 'r'], 3)
+    nbc = NBC(['r', 'r', 'r'], 3)
+
+#   Handin 1: As C is the inverse of regularisation strength I would choose C = 10 for lambda = 0.1
+    log_reg = LogisticRegression(C = 10)
+
     
-    nbc.fit(X, y)
-    nbc.predict(np.array([[3.5, 4.5], [10, 3]]))
-    
+
+
 main()
