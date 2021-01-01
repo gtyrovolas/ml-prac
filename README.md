@@ -6,4 +6,4 @@ Broadly, practical 1 concerns Linear Regression using Ridge Regression and Lasso
 
 Practical 2 is a study of comparing a Naive Bayes Classifier with Logistic Regression on the sklearn iris dataset.
 
-Practical 3 implements a convolutional neural network in keras to identify digits on the MNIST dataset. 
+Practical 3 implements a convolutional neural network in keras to identify digits on the MNIST dataset. It identifies digits with a 98% accuracy.
