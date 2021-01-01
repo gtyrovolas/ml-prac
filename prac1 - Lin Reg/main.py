@@ -74,7 +74,7 @@ def lin(trainingData, testingData):
     # add a bias term
     ones_vector_train = [[1] for i in range(n_train)]
     ones_vector_test = [[1] for i in range(n_test)]
-    
+
     # adjoin ones vector
     X_train = np.hstack((ones_vector_train, X_train))
     X_test = np.hstack((ones_vector_test, X_test))
@@ -171,17 +171,17 @@ def main():
 
     # import white whine data, X is the input set, y is the output set
     X, y = cp.load(open('winequality-white.pickle', 'rb'))
-    n, _ = X.shape	
+    n, _ = X.shape
 
 #   Handin 1: Bar graph
     mkbar(y)
 
-#   Handin 2: Error for naive average "predictor" 
+#   Handin 2: Error for naive average "predictor"
     n_train = int(0.8 * n)
     naiveErr = naive(y[:n_train], y[n_train:])
     print("Naive error is: " + str(naiveErr))  # naiveErr = 0.8138573000045535
 
-#   Handin 3: Linear regression errors 
+#   Handin 3: Linear regression errors
     trainErr, testErr = wrapLin(X, y, int(0.8 * n), n - int(0.8 * n))
     print("Training error is: " + str(trainErr))
     print("Testing error is:  " + str(testErr))
