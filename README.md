@@ -1,6 +1,6 @@
-# ml-prac1
-Code for the three practicals of the Machine Learning course @ Oxford Uni. Taken in Michaelmas Term 2020.
-Instructions for each exercise can be found in the instructions.pdf file in each subdirectory.
+# Machine Learning Practical
+This is my code for the practical component of the Undergraduate Machine Learning course at the University of Oxford. 
+Detailed instructions for each exercise can be found in the instructions.pdf file in each subdirectory.
 
 Broadly, practical 1 concerns Linear Regression using Ridge Regression and Lasso Optimisation used to determine the quality of wine given 11 characteristics.
 
