@@ -5,8 +5,6 @@ import tensorflow.keras.layers as layers
 def main():
     mnist = tf.keras.datasets.mnist
 
-    mnist = tf.keras.datasets.mnist
-
     (x_train, y_train), (x_test, y_test) = mnist.load_data()
 
     # One-hot encoding
